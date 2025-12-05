@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .product-card{
+            border: 1px solid ;
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            border-radius: 10px;
+
+        }
+        .product-card:hover{
+            box-shadow:2px 1px 2px 5px black;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Shop<span style="color: red;font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">ee</span></h1>
+
+    <div class="findProduct" style="display: flex; justify-content: space-between;">
+       
+       <!-- find -->
+        <div>
+        <input type="text" id="item" style="padding: 10px;" placeholder="Find Product">
+        <button onclick="findProduct()" style="background-color:black;color: white; border: none;padding: 10px;width: 90px;">Find</button>
+       </div>
+
+
+       <!-- sort -->
+       <div>
+        <label for="">Sort
+        <select name="" onchange="sortPrice()" id="sort" style="padding: 10px;background-color: black;color: white;">
+            <option value="asc">Low - High</option>
+            <option value="dsc">High - Low</option>
+        </select>
+        </label>
+       </div>
+       
+
+       <!-- cart -->
+       <div class="cart">
+        <button onclick="cartProducts()" id="Cart-btn" style="background-color: black;color: white;padding:10px;">Cart</button>
+       </div>
+
+       <!-- auth -->
+       <div class="login">
+        <button style="background-color: black;color: white;padding:10px;">Login</button>
+       </div>
+
+    </div>
+
+ <!-- Products div -->
+    <div id="products" style="display:grid;grid-template-columns:  1fr 1fr; justify-content: center; padding: 10px;"> </div>
+      
+
+<!-- Pagination -->
+ <div id="pagination" style="text-align: center;"></div>
+
+
+ <!-- dev panel -->
+  <div id="panel">
+
+  </div>
+
+</body>
+</html>
+
+<script>
+    let products=[]
+    let filtered=[]
+    let cart=JSON.parse(localStorage.getItem("cart")|| "[]")
+
+    // let token=localStorage.getItem("token") || null
+
+    // let history=JSON.parse(localStorage.getItem("history")||[])
+
+    let logs=[]
+
+    let p=1
+    let perPage=4
+
+
+
+    //api logs
+    function apiLogger(url,method,status,duration) {
+        logs.unshift(`${method}-${url}-${status}-${duration}ms`)
+
+        if(logs.length>5) logs.pop()
+
+        document.getElementById("panel").innerHTML=logs.join("<br>")
+    }
+
+    // fetch
+    function fetchProducts(){
+        fetch("https://fakestoreapi.com/products")
+        .then(res=>res.json())
+        .then(data=>{
+            products=data
+            mapProducts(data)
+        })
+    }
+    
+    
+    //mapping
+    function mapProducts(data){
+      let productsBox=document.getElementById("products")
+
+      productsBox.innerHTML=data.map(p=> `
+        <div class="product-card">
+          <img src="${p.image}" style="width:90px"/>
+          <p>${p.title}</p>
+          <p>₹${p.price}</p>
+          <button onclick="addToCart(${p.id})">Add To Cart</button>
+        </div>
+     ` ).join("")
+    }
+
+
+
+    //find
+    function findProduct() {
+        let q=document.getElementById("item").value.toLowerCase()
+        let finded=products.filter(p=>p.title.toLowerCase().includes(q))
+
+        mapProducts(finded)
+    }
+
+
+    //sort
+    function sortPrice(){
+        let s=document.getElementById("sort").value
+        let list=[...products]
+        if(s=="asc") {
+            list.sort((a,b)=>a.price-b.price)
+        }
+        else{
+            list.sort((a,b)=>b.price-a.price)
+        }
+
+        mapProducts(list)
+    }
+
+    //login
+
+    function auth() {
+        let name=prompt("username")
+        let password=prompt("password")
+    }
+
+    //cart products
+    function cartProducts(){
+       let z=document.getElementById("")
+       let box=document.getElementById("products")
+       box.innerHTML=`<button>checkOut()</button>`
+        box.innerHTML=cart.map(c=>`
+         <div class="product-card">
+          <img src="${c.image}" style="width:90px"/>
+          <p>${c.title}</p>
+          <p>₹${c.price}</p>
+          <p>qty-${c.qty}</p>
+        </div>
+        `).join("")
+    }
+  
+    //cart
+    function addToCart(id) {
+        let pro=products.find(x=> x.id== id)
+
+        let item=cart.find(y=>y.id==id)
+
+        if(item) {
+            item.qty++
+        }
+        else{
+            cart.push({...pro,qty:1})
+        }
+        localStorage.setItem("cart",JSON.stringify(cart))
+        alert("item added")
+    }
+
+fetchProducts()
+</script>
