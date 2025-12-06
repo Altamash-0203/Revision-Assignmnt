@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PostGram</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1 style="text-align: center; font-family: cursive;border-bottom: 2px solid blue;">Post<span style=" color: rgb(234, 91, 191);">gram</span></h1>
+    </header>    
+
+    <nav>
+        <div>
+            <div class="input-box">
+                <input type="text" id="search" placeholder="Find Post">
+            </div>
+
+
+            <div class="transformers">
+               <label for=""><input type="checkbox">Long Post</label>
+               <label for=""><input type="checkbox">User 1 posts</label>
+               <label for=""><input type="checkbox">Sort by comment</label>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+    <div id="main-section">
+      <div id="posts">
+       
+      </div>    
+
+
+      <div id="pagination">
+          <button id="page-prev">Prev</button>
+          <span id="curr-page"></span>
+          <button id="page-next">next</button>
+      </div>
+    </div>
+
+
+
+    <!-- post full info-->
+     <div id="post-info">
+     
+     </div>
+
+ <button id="back-btn">Back</button>
+
+     <script src="Index.js"></script>
+</body>
+</html>
